@@ -1,0 +1,3 @@
+<template>
+    <samplesMain></samplesMain>
+</template>
