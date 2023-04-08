@@ -31,11 +31,12 @@ const projectsIndex = ref(0);
 const formPrefillData = ref({});
 
 // To get Project Details
-const { data: getProjectsData } = useAuthLazyFetch(
-  "https://v1-orm-gharpe.mercury.infinity-api.net/api/projects/?offset=0&limit=100&sort_column=id&sort_direction=desc"
-);
-projectsData.value = getProjectsData.value;
-
+const getProjects = () => {
+  const { data: getProjectsData } = useAuthLazyFetch(
+    "https://v1-orm-gharpe.mercury.infinity-api.net/api/projects/?offset=0&limit=100&sort_column=id&sort_direction=desc"
+  );
+  projectsData.value = getProjectsData.value;
+};
 // To submit form data when click on submit button
 const submitFormData = async (formData: Object) => {
   let options = {
@@ -61,10 +62,7 @@ const updateForm = async (formDetails: Object) => {
     `https://v1-orm-gharpe.mercury.infinity-api.net/api/projects/${formDetails.uid}`,
     options
   );
-  const { data: updateData } = await useAuthLazyFetch(
-    "https://v1-orm-gharpe.mercury.infinity-api.net/api/projects/?offset=0&limit=100&sort_column=id&sort_direction=desc"
-  );
-  projectsData.value = updateData.value;
+  getProjects();
 };
 
 // When delete project at particular row on click
@@ -74,9 +72,7 @@ const deleteProject = async (project: Object) => {
     `https://v1-orm-gharpe.mercury.infinity-api.net/api/projects/${project.uid}`,
     options
   );
-  const { data: deleteResponse } = await useAuthLazyFetch(
-    "https://v1-orm-gharpe.mercury.infinity-api.net/api/projects/?offset=0&limit=100&sort_column=id&sort_direction=desc"
-  );
-  projectsData.value = deleteResponse.value;
+  getProjects();
 };
+getProjects();
 </script>
