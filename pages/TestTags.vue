@@ -1,0 +1,3 @@
+<template>
+    <tagsMain></tagsMain>
+</template>
