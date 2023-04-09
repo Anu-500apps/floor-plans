@@ -1,22 +1,39 @@
 <template>
   <div>
-    <tagsAdd v-if="openModal" :open="open" @submit-tag="submitTags"></tagsAdd>
-    <tagsList :getTags="tags" @open-modal="openModal = true"></tagsList>
+    <tagsAdd
+      v-if="openModal"
+      :open="openModal"
+      @submit-tag="submitTags"
+    ></tagsAdd>
+    <tagsList
+      :getTags="tags"
+      @open-modal="openModal = true"
+      @delete-row="deleleTagRow"
+      @edit-row="editPrefill"
+    ></tagsList>
+    <tagsEdit
+      :editForm="editForm"
+      v-if="editModal"
+      @update-tag="updateModal"
+    ></tagsEdit>
   </div>
 </template>
 <script setup>
-import { PlusIcon } from "@heroicons/vue/20/solid";
 const openModal = ref(false);
 const tags = ref([]);
+const editForm = ref({ name: "" });
+const editModal = ref(false);
+const formIndex = ref(0);
 // To get Bank Details
-const getTagsData = async () => {
-  const { data: getTags } = await useAuthLazyFetch(
+const getTagsData = () => {
+  const { data: tagsResponse } = useAuthLazyFetch(
     "https://v1-orm-lib.mars.hipso.cc/api/tags/entity/CONTACTS?offset=0&limit=100&sort_column=id&sort_direction=desc"
   );
-  tags.value = getTags.value;
+  tags.value = tagsResponse.value;
 };
 getTagsData();
 
+// To submit form
 const submitTags = async (formData) => {
   let tagoptions = {
     body: formData,
@@ -25,7 +42,27 @@ const submitTags = async (formData) => {
     "https://v1-orm-lib.mars.hipso.cc/api/tags/",
     tagoptions
   );
-  // getTagsData();
-  tags.value = storeTags.value;
+  tags.value.unshift(storeTags);
+};
+
+// To prefill form
+const editPrefill = (tag, index) => {
+  editForm.value = { ...tag };
+  editModal.value = true;
+};
+
+// Update tag after edit
+const updateModal = async (payload) => {
+  await useAuthLazyFetchPut(
+    `https://v1-orm-lib.mars.hipso.cc/api/tags/${payload.uid}?name=${payload.name}`
+  );
+};
+
+// When delete tags at particular row on click
+const deleleTagRow = async (deleteTag, index) => {
+  await useAuthLazyFetchDelete(
+    `https://v1-orm-lib.mars.hipso.cc/api/tags/${deleteTag.uid}`
+  );
+  tags.value = tagsResponse.value;
 };
 </script>

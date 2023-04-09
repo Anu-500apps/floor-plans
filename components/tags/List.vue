@@ -1,7 +1,7 @@
 <template>
   <div class="px-4 sm:px-6 lg:px-8">
     <div class="sm:flex sm:items-center">
-       <div class="flex justify-center">
+      <div class="flex justify-center">
         <button
           type="button"
           @click="emits('open-modal')"
@@ -25,7 +25,7 @@
                     scope="col"
                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                   >
-                  Name
+                    Name
                   </th>
                   <th
                     scope="col"
@@ -33,38 +33,47 @@
                   >
                     Entity
                   </th>
-                  <th>
+                  <th
+                    scope="col"
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
                     Project Id
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Is Active
                   </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white font-serif">
-                <tr v-for="(tagsData, index) in getTags" :key="index">
+                <tr v-for="(tagsData, index) in getTags" :key="tagsData.name">
                   <td
                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-green-900 sm:pl-6"
                   >
-                    {{ tagsData.category }}
+                    {{ tagsData.name }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ tagsData.skill }}
+                    {{ tagsData.entity }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ tagsData.question_type }}
+                    {{ tagsData.project_id }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ tagsData.sub_skill }}
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-blue-500">
-                    {{ tagsData.difficulty_level }}
+                    {{ tagsData.is_active }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ tagsData.answer_hint }}
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ tagsData.question_url }}
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <banksEdit @delete-row="open = true"></banksEdit>
+                    <div class="flex">
+                      <PencilSquareIcon
+                        class="h-6 w-6 text-blue-700"
+                        @click="emits('edit-row', tagsData, index)"
+                      ></PencilSquareIcon>
+                      <TrashIcon
+                        class="h-6 w-6 text-red-700"
+                        @click="deleteTag(tagsData,index), (open = true)"
+                      ></TrashIcon>
+                    </div>
                   </td>
 
                   <TransitionRoot as="template" :show="open">
@@ -136,7 +145,7 @@
                                   class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto"
                                   @click="open = false"
                                 >
-                                  Delete
+                                Delete Tag
                                 </button>
                                 <button
                                   type="button"
@@ -166,6 +175,7 @@
 <script setup lang="ts">
 // Define Import Statements
 import { ref, defineProps, defineEmits } from "vue";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import {
   Dialog,
   DialogPanel,
@@ -174,13 +184,17 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-
-const open = ref(false);
+// Define Emits
+const emits = defineEmits(["open-modal", "edit-row", "delete-row"]);
 // Define Props
 const props = defineProps({
   openSidebar: Boolean,
   getTags: Array,
 });
-// Define Emits
-const emits = defineEmits(["open-modal"]);
+const open = ref(false);
+
+// when open click on delete on row
+const deleteTag = (data: Object ,index:Number) => {
+  emits("delete-row", data,index);
+};
 </script>
