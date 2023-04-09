@@ -34,7 +34,7 @@ const getTagsData = () => {
 getTagsData();
 
 // To submit form
-const submitTags = async (formData) => {
+const submitTags = async (formData: Object) => {
   let tagoptions = {
     body: formData,
   };
@@ -46,15 +46,15 @@ const submitTags = async (formData) => {
 };
 
 // To prefill form
-const editPrefill = (tag, index) => {
+const editPrefill = (tag: Object, index: Number) => {
   editForm.value = { ...tag };
   editModal.value = true;
 };
 
 // Update tag after edit
-const updateModal = async (payload) => {
+const updateModal = async (payload: Object) => {
   let editOptions = {
-    body: payload,
+    body: payload
   };
   await useAuthLazyFetchPut(
     `https://v1-orm-lib.mars.hipso.cc/api/tags/${payload.uid}?name=${payload.name}`,
@@ -63,9 +63,9 @@ const updateModal = async (payload) => {
 };
 
 // When delete tags at particular row on click
-const deleleTagRow = async (deleteTag, index) => {
+const deleleTagRow = async (deleteTag: Object, index: Number) => {
   await useAuthLazyFetchDelete(
-    `https://v1-orm-lib.mars.hipso.cc/api/tags/${deleteTag.uid}`
+    `https://v1-orm-lib.mars.hipso.cc/api/tags/${deleteTag.uid}`,""
   );
   tags.value.splice(index, 1);
 };
