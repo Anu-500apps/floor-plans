@@ -53,8 +53,12 @@ const editPrefill = (tag, index) => {
 
 // Update tag after edit
 const updateModal = async (payload) => {
+  let editOptions = {
+    body: payload,
+  };
   await useAuthLazyFetchPut(
-    `https://v1-orm-lib.mars.hipso.cc/api/tags/${payload.uid}?name=${payload.name}`
+    `https://v1-orm-lib.mars.hipso.cc/api/tags/${payload.uid}?name=${payload.name}`,
+    editOptions
   );
 };
 
@@ -63,6 +67,6 @@ const deleleTagRow = async (deleteTag, index) => {
   await useAuthLazyFetchDelete(
     `https://v1-orm-lib.mars.hipso.cc/api/tags/${deleteTag.uid}`
   );
-  tags.value = tagsResponse.value;
+  tags.value.splice(index, 1);
 };
 </script>
