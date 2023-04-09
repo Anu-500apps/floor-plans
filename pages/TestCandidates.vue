@@ -1,0 +1,3 @@
+<template>
+    <candidatesMain></candidatesMain>
+</template>
