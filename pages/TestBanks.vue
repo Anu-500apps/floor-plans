@@ -1,0 +1,3 @@
+<template>
+    <banksMain></banksMain>
+</template>
