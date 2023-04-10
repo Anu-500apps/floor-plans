@@ -18,7 +18,7 @@ import { ref } from "vue";
 const openSidebar = ref(false);
 const bankDetails = ref([]);
 
-// To get Bank Details
+// To get tag Details
 const { data: getbankDetails } = await useAuthLazyFetch(
   "https://v7-stark-db-orm.mercury.infinity-api.net/api/question-bank/?offset=0&limit=100&sort_column=id&sort_direction=desc"
 );
